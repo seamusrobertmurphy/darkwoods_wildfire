@@ -6,18 +6,20 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-#install.packages(c("readxl", "sf", "kernlab", "ggplot2", "dplyr", "RColorBrewer", "psych", "useful", "caret", "tibble", "klaR"))
+#install.packages(c("readxl", "sf", "kernlab", "ggplot2", "dplyr", "RColorBrewer", "psych", "useful", "caret", "tibble", "klaR", "ModelMetrics", "DescTools", "MLmetrics"), dependencies=TRUE)
 library(readxl)
 library(sf)
 library(kernlab)
 library(ggplot2)
 library(dplyr)
 library(RColorBrewer)
-library(psych)
 library(useful)
 library(caret)
 library(tibble)
 library(klaR)
+library(ModelMetrics)
+library(DescTools)
+#library(DescTools)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -28,10 +30,10 @@ Set seed for replication to `123`. Import excel data representing training data 
 ```{r}
 set.seed(123) 
 darkwoods_fire_plots_data <- read_excel("3.1.darkwoods_fire_plots.xls")
-print(darkwoods_beetle_plots_data)
+print(darkwoods_fire_plots_data)
 ```
 
-## Derive NDBR predictors
+# Model NDBR
 
 ```{r}
 ndbr_lm <- lm(CBI_total_2 ~ NDBR_2016, data = darkwoods_fire_plots_data)
@@ -43,7 +45,7 @@ abline(ndbr_lm, col = "red")
 
 ## Train models
 
-Splitting data 70:30 between training:test samples based on outcome variable: 'CBI_total_2'.
+Splitting data 70:30 between training and test subsamples according to distribution of response variable: 'CBI_total_2'.
 
 ```{r}
 training.samples <- createDataPartition(darkwoods_fire_plots_data$CBI_total_2, p=0.70, list = FALSE)
@@ -51,43 +53,34 @@ training.samples <- createDataPartition(darkwoods_fire_plots_data$CBI_total_2, p
                                            test.data <- darkwoods_fire_plots_data[-training.samples, ]
 ```
 
-A.  Model training method fitted with 10K-fold cross validation by 10 repeats: `repeatedcv`. Use `savePredictions` function for visualization purposes.
+A.  Model training regime fitted with 10K-fold cross validation by 10 repeats: `repeatedcv`. Use `savePredictions` function for visualization purposes.
+B.  Model training regime fitted with 10K-fold cross validation by 3 repeats: `method = "repeatedcv", number = 10, repeats = 3`
+C.  Model training regime fitted with simple 5K-fold cross validation: `method = "cv", number = 5`
 
 ```{r}
 model_training_10kfold_10repeat <- trainControl(method = "repeatedcv", 
                                       number = 10, repeats = 10,
                                       savePredictions = TRUE)
-```
 
-B.  Model training method fitted with 10K-fold cross validation by 3 repeats: `method = "repeatedcv", number = 10, repeats = 3`
 
-```{r}
 model_training_10kfold_3repeat <- trainControl(method = "repeatedcv", 
                                                number = 10, repeats = 3, 
                                                savePredictions = TRUE)
+
+
+model_training_5kfold <- trainControl(method = "cv",
+                                      number = 5, 
+                                      savePredictions = TRUE) 
 ```
 
-C.  Model training method fitted with 5K-fold cross validation by 3 repeats: `method = "cv", number = 5, repeats = 3`
-
-```{r}
-model_training_5kfold_3repeat <- trainControl(method = "cv", 
-                                              number = 5, repeats = 3, 
-                                              savePredictions = TRUE) 
-```
-
-Visualize training regimes.
-
-```{r}
-plot(model_training_10kfold_10repeat)
-plot(model_training_10kfold_10repeat, plotType = "level")
-ggplot(model_training_10kfold_10repeat) + theme_bw()
-```
 
 ## Tune models
 
 Apply 10K-fold-X10 training regime to training data to test performance of support vector machine regressions with `svmRadial` and `svmLinear` kernels, and random forest regression tree. Models include preprocessing operations to `center` and `scale` distribution of datasets. Extent, patterns and grain of tuning grids are set differently with `tuneGrid` and `tuneLength` functions. 
 
-1.  Model 1: NDBR prediction tested with linear SVM kernel and trained with 10K-fold-X10 regime.
+1.  Model-1: NDBR prediction tested with linear SVM kernel and trained with 10K-fold-X10 regime.
+2.  Model-2: NDBR prediction tested with nonlinear SVM kernel and trained with 10K-fold-X10 regime.
+3.  Model-3: NDBR prediction tested with random forest regression tree of `1000` decision branches and performance bias `Rsquared`, and trained with 10K-fold-X10 regime. 
 
 ```{r}
 svm_ndbr_log_linear <- train(CBI_total_2 ~ NDBR_2016, 
@@ -95,44 +88,355 @@ svm_ndbr_log_linear <- train(CBI_total_2 ~ NDBR_2016,
                              method = "svmLinear",
                              trControl = model_training_10kfold_10repeat, 
                              preProcess = c("center","scale"), 
-                             tuneGrid = expand.grid(C=seq(0,3, length = 20)))
-```
+                             tuneGrid = expand.grid(C=seq(0,3, length = 10)),
+                             metric="RMSE")
 
-2.  Model 2: NDBR prediction tested with nonlinear SVM kernel and trained with 10K-fold-X10 regime.
-
-```{r}
 svm_ndbr_log_radial <- train(CBI_total_2 ~ NDBR_2016, 
                              data = train.data, 
                              method = "svmRadial",
                              trControl = model_training_10kfold_10repeat, 
                              preProcess = c("center","scale"), 
                              tunelength=10)
-```
 
-3.  Model 3: NDBR prediction tested with random forest regression tree of `1000` decision branches and performance bias `Rsquared`, and trained with 10K-fold-X10 regime. 
-
-```{r}
-model_training_rf_1000trees = train(CBI_total_2 ~ NDBR_2016, 
+rf_nndbr_1000trees = train(CBI_total_2 ~ NDBR_2016, 
                                     data = train.data, 
                                     method="rf", ntree=1000, 
-                                    metric="Rsquared",
+                                    metric="RMSE",
                                     trControl=model_training_10kfold_10repeat,
                                     importance = TRUE)
+
+# Selected model
+svm_ndbr_log_linear_full <- train(CBI_total_2 ~ NDBR_2016, 
+                                  data = darkwoods_fire_plots_data,
+                                  method = "svmLinear",
+                                  trControl = model_training_10kfold_10repeat, 
+                                  preProcess = c("center","scale"), 
+                                  tuneGrid = expand.grid(C=seq(0,3, length = 10)),
+                                  metric="RMSE")
+
+svm_ndbr_log_linear_full$finalModel # Final parameters reported
 ```
 
 ## Test models
 
-A. 
-summary(lm(predict(svm_ndbr_log_linear) ~ train.data$CBI_total_2))
+Compare model performances against test data measuring accuracy, precision, and model biases using absolute and relative MAE, RMSE, and RMSE-ratio metrics, as well as the `TheilU` function.
+
+```{r}
+#summary(lm(predict(svm_ndbr_log_linear) ~ train.data$CBI_total_2))
+#summary(lm(predict(svm_ndbr_log_linear) ~ test.data$CBI_total_2))
+
 svm_ndbr_pred_train <- predict(svm_ndbr_log_linear, data = train.data)
+svm_ndbr_pred_test <- predict(svm_ndbr_log_linear, data = test.data)
+svm_ndbr_pred_full <- predict(svm_ndbr_log_linear_full, data = darkwoods_fire_plots_data)
+
+svm_ndbr_pred_full_r2 = MLmetrics::R2_Score(svm_ndbr_pred_full, darkwoods_fire_plots_data$CBI_total_2)
+svm_ndbr_pred_train_r2 = MLmetrics::R2_Score(svm_ndbr_pred_train, train.data$CBI_total_2)
+svm_ndbr_pred_test_r2 = MLmetrics::R2_Score(svm_ndbr_pred_test, test.data$CBI_total_2)
+
+svm_ndbr_pred_full_mae <- mae(svm_ndbr_pred_full, darkwoods_fire_plots_data$CBI_total_2)
 svm_ndbr_pred_train_mae <- mae(svm_ndbr_pred_train, train.data$CBI_total_2)
-svm_ndbr_pred_train_mae 
+svm_ndbr_pred_test_mae <- mae(svm_ndbr_pred_test, test.data$CBI_total_2)
+svm_ndbr_pred_full_mae_rel <- (svm_ndbr_pred_full_mae/mean(darkwoods_fire_plots_data$CBI_total_2))*100
 svm_ndbr_pred_train_mae_rel <- (svm_ndbr_pred_train_mae/mean(train.data$CBI_total_2))*100
-svm_ndbr_pred_train_mae_rel
+svm_ndbr_pred_test_mae_rel <- (svm_ndbr_pred_test_mae/mean(test.data$CBI_total_2))*100
+
+svm_ndbr_pred_full_rmse <- rmse(svm_ndbr_pred_train, darkwoods_fire_plots_data$CBI_total_2)
 svm_ndbr_pred_train_rmse <- rmse(svm_ndbr_pred_train, train.data$CBI_total_2)
-svm_ndbr_pred_train_rmse
+svm_ndbr_pred_test_rmse <- rmse(svm_ndbr_pred_test, test.data$CBI_total_2)
+svm_ndbr_pred_full_rmse_rel <- (svm_ndbr_pred_full_rmse/mean(darkwoods_fire_plots_data$CBI_total_2))*100
 svm_ndbr_pred_train_rmse_rel <- (svm_ndbr_pred_train_rmse/mean(train.data$CBI_total_2))*100
+svm_ndbr_pred_test_rmse_rel <- (svm_ndbr_pred_test_rmse/mean(test.data$CBI_total_2))*100
+
+svm_ndbr_pred_train_rmseRatio = svm_ndbr_pred_train_rmse/svm_ndbr_pred_test_rmse
+svm_ndbr_pred_test_rmseRatio = svm_ndbr_pred_test_rmse/svm_ndbr_pred_train_rmse
+svm_ndbr_full_Ubias_DescTools = DescTools::TheilU(darkwoods_fire_plots_data$CBI_total_2, svm_ndbr_pred_full, type = 2)
+
+svm_ndbr_pred_full_r2
+svm_ndbr_pred_train_r2
+svm_ndbr_pred_test_r2
+
+svm_ndbr_pred_full_mae
+svm_ndbr_pred_train_mae 
+svm_ndbr_pred_test_mae
+
+svm_ndbr_pred_full_mae_rel
+svm_ndbr_pred_train_mae_rel
+svm_ndbr_pred_test_mae_rel
+
+svm_ndbr_pred_full_rmse
+svm_ndbr_pred_train_rmse
+svm_ndbr_pred_test_rmse
+
+svm_ndbr_pred_full_rmse_rel
 svm_ndbr_pred_train_rmse_rel
-TheilU(train.data$CBI_total_2, svm_ndbr_pred_train, type = 2)
-svm_ndbr_train_Ubias <- ((svm_ndbr_pred_train_mae)*68)/((svm_ndbr_pred_train_mae)^2)
-svm_ndbr_train_Ubias
+svm_ndbr_pred_test_rmse_rel
+
+svm_ndbr_pred_train_rmseRatio
+svm_ndbr_pred_test_rmseRatio
+svm_ndbr_full_Ubias_DescTools
+```
+
+## Visualize models
+
+```{r}
+trellis.par.set(caretTheme())
+plot(svm_ndbr_log_linear)
+plot(svm_ndbr_log_radial)
+#plot(rf_nndbr_1000trees)
+densityplot(svm_ndbr_log_linear, pch = "|")
+densityplot(svm_ndbr_log_radial, pch = "|")
+densityplot(rf_nndbr_1000trees, pch = "|")
+```
+
+## Compare models
+
+```{r}
+
+#model 2 - NDBR-SW
+svm_ndbr_sw_linear <- train(CBI_total_2 ~ NDBR_SW2_2, 
+                            data = train.data,
+                            method = "svmLinear",
+                            trControl = model_training_10kfold, 
+                            preProcess = c("center","scale"), 
+                            tuneGrid = expand.grid(C=seq(0,3, length = 20)))
+
+#model 3 - BAI2
+svm_bai2_linear <- train(CBI_total_2 ~ BAI2_2016, 
+                            data = train.data,
+                            method = "svmLinear",
+                            trControl = model_training_10kfold, 
+                            preProcess = c("center","scale"), 
+                            tuneGrid = expand.grid(C=seq(0,3, length = 20)))
+
+#model 4 - MIRBI
+svm_mirbi_linear <- train(CBI_total_2 ~ MIRBI_2016, 
+                            data = train.data,
+                            method = "svmLinear",
+                            trControl = model_training_10kfold, 
+                            preProcess = c("center","scale"), 
+                            tuneGrid = expand.grid(C=seq(0,3, length = 20)))
+
+#model 5 - MSAV
+svm_msav_linear <- train(CBI_total_2 ~ MSAV_2016, 
+                            data = train.data,
+                            method = "svmLinear",
+                            trControl = model_training_10kfold, 
+                            preProcess = c("center","scale"), 
+                            tuneGrid = expand.grid(C=seq(0,3, length = 20)))
+
+#model 6 - TVI
+svm_tvi_linear <- train(CBI_total_2 ~ VIT2_2016, 
+                            data = train.data,
+                            method = "svmLinear",
+                            trControl = model_training_10kfold, 
+                            preProcess = c("center","scale"), 
+                            tuneGrid = expand.grid(C=seq(0,3, length = 20)))
+
+#model 7 - TVI-SW
+svm_tvi_sw_linear <- train(CBI_total_2 ~ VIRSW2_201, 
+                            data = train.data,
+                            method = "svmLinear",
+                            trControl = model_training_10kfold, 
+                            preProcess = c("center","scale"), 
+                            tuneGrid = expand.grid(C=seq(0,3, length = 20)))
+
+
+#model 2 - NDBRSW results
+summary(lm(predict(svm_ndbr_sw_linear) ~ train.data$CBI_total_2))
+svm_ndbr_sw_pred_train <- predict(svm_ndbr_sw_linear, data = train.data)
+svm_ndbr_sw_pred_train_mae <- mae(svm_ndbr_sw_pred_train, train.data$CBI_total_2)
+svm_ndbr_sw_pred_train_mae 
+svm_ndbr_sw_pred_train_mae_rel <- (svm_ndbr_sw_pred_train_mae/mean(train.data$CBI_total_2))*100
+svm_ndbr_sw_pred_train_mae_rel
+svm_ndbr_sw_pred_train_rmse <- rmse(svm_ndbr_sw_pred_train, train.data$CBI_total_2)
+svm_ndbr_sw_pred_train_rmse
+svm_ndbr_sw_pred_train_rmse_rel <- (svm_ndbr_sw_pred_train_rmse/mean(train.data$CBI_total_2))*100
+svm_ndbr_sw_pred_train_rmse_rel
+svm_ndbr_sw_pred_train_R2 <- R2(svm_ndbr_sw_pred_train, train.data$CBI_total_2)
+svm_ndbr_sw_pred_train_R2
+TheilU(train.data$CBI_total_2, svm_ndbr_sw_pred_train, type = 2)
+svm_ndbr_sw_train_Ubias <- ((svm_ndbr_sw_pred_train_mae)*68)/((svm_ndbr_sw_pred_train_mae)^2)
+svm_ndbr_sw_train_Ubias
+
+svm_ndbr_sw_pred_test <- predict(svm_ndbr_sw_linear, data = darkwoods_fire_plots_data)
+svm_ndbr_sw_pred_test_rmse <- rmse(svm_ndbr_sw_pred_test, darkwoods_fire_plots_data$CBI_total_2)
+svm_ndbr_sw_pred_test_rmse
+svm_ndbr_sw_pred_test_rmse_rel <- (svm_ndbr_sw_pred_test_rmse/mean(darkwoods_fire_plots_data$CBI_total_2))*100
+svm_ndbr_sw_pred_test_rmse_rel
+
+svm_ndbr_sw_pred_train_rmse/svm_ndbr_sw_pred_test_rmse
+svm_ndbr_sw_pred_test_rmse/svm_ndbr_sw_pred_train_rmse
+
+svm_ndbr_sw_linear
+plot(svm_ndbr_sw_linear)
+densityplot(svm_ndbr_sw_linear)
+svm_ndbr_sw_linear$finalModel
+plot(svm_ndbr_sw_linear)
+
+
+#model 3 - BAI2 results
+summary(lm(predict(svm_bai2_linear) ~ train.data$CBI_total_2))
+svm_bai2_pred_train <- predict(svm_bai2_linear, data = train.data)
+svm_bai2_pred_train_mae <- mae(svm_bai2_pred_train, train.data$CBI_total_2)
+svm_bai2_pred_train_mae 
+svm_bai2_pred_train_mae_rel <- (svm_bai2_pred_train_mae/mean(train.data$CBI_total_2))*100
+svm_bai2_pred_train_mae_rel
+svm_bai2_pred_train_rmse <- rmse(svm_bai2_pred_train, train.data$CBI_total_2)
+svm_bai2_pred_train_rmse
+svm_bai2_pred_train_rmse_rel <- (svm_bai2_pred_train_rmse/mean(train.data$CBI_total_2))*100
+svm_bai2_pred_train_rmse_rel
+svm_bai2_pred_train_R2 <- R2(svm_bai2_pred_train, train.data$CBI_total_2)
+svm_bai2_pred_train_R2
+TheilU(train.data$CBI_total_2, svm_bai2_pred_train, type = 2)
+svm_bai2_train_Ubias <- ((svm_bai2_pred_train_mae)*68)/((svm_bai2_pred_train_mae)^2)
+svm_bai2_train_Ubias
+
+svm_bai2_pred_test <- predict(svm_bai2_linear, data = darkwoods_fire_plots_data)
+svm_bai2_pred_test_rmse <- rmse(svm_bai2_pred_test, darkwoods_fire_plots_data$CBI_total_2)
+svm_bai2_pred_test_rmse
+svm_bai2_pred_test_rmse_rel <- (svm_bai2_pred_test_rmse/mean(darkwoods_fire_plots_data$CBI_total_2))*100
+svm_bai2_pred_test_rmse_rel
+
+svm_bai2_pred_train_rmse/svm_bai2_pred_test_rmse
+svm_bai2_pred_test_rmse/svm_bai2_pred_train_rmse
+
+svm_bai2_linear
+plot(svm_bai2_linear)
+densityplot(svm_bai2_linear)
+svm_bai2_linear$finalModel
+plot(svm_bai2_linear)
+
+
+#model 4 - MIRBI results
+summary(lm(predict(svm_mirbi_linear) ~ train.data$CBI_total_2))
+svm_mirbi_pred_train <- predict(svm_mirbi_linear, data = train.data)
+svm_mirbi_pred_train_mae <- mae(svm_mirbi_pred_train, train.data$CBI_total_2)
+svm_mirbi_pred_train_mae 
+svm_mirbi_pred_train_mae_rel <- (svm_mirbi_pred_train_mae/mean(train.data$CBI_total_2))*100
+svm_mirbi_pred_train_mae_rel
+svm_mirbi_pred_train_rmse <- rmse(svm_mirbi_pred_train, train.data$CBI_total_2)
+svm_mirbi_pred_train_rmse
+svm_mirbi_pred_train_rmse_rel <- (svm_mirbi_pred_train_rmse/mean(train.data$CBI_total_2))*100
+svm_mirbi_pred_train_rmse_rel
+svm_mirbi_pred_train_R2 <- R2(svm_mirbi_pred_train, train.data$CBI_total_2)
+svm_mirbi_pred_train_R2
+TheilU(train.data$CBI_total_2, svm_mirbi_pred_train, type = 2)
+svm_mirbi_train_Ubias <- ((svm_mirbi_pred_train_mae)*68)/((svm_mirbi_pred_train_mae)^2)
+svm_mirbi_train_Ubias
+
+svm_mirbi_pred_test <- predict(svm_mirbi_linear, data = darkwoods_fire_plots_data)
+svm_mirbi_pred_test_rmse <- rmse(svm_mirbi_pred_test, darkwoods_fire_plots_data$CBI_total_2)
+svm_mirbi_pred_test_rmse
+svm_mirbi_pred_test_rmse_rel <- (svm_mirbi_pred_test_rmse/mean(darkwoods_fire_plots_data$CBI_total_2))*100
+svm_mirbi_pred_test_rmse_rel
+
+svm_mirbi_pred_train_rmse/svm_mirbi_pred_test_rmse
+svm_mirbi_pred_test_rmse/svm_mirbi_pred_train_rmse
+
+svm_mirbi_linear
+plot(svm_mirbi_linear)
+densityplot(svm_mirbi_linear)
+svm_mirbi_linear$finalModel
+plot(svm_mirbi_linear)
+
+
+#model 5 - MSAV results
+summary(lm(predict(svm_msav_linear) ~ train.data$CBI_total_2))
+svm_msav_pred_train <- predict(svm_msav_linear, data = train.data)
+svm_msav_pred_train_mae <- mae(svm_msav_pred_train, train.data$CBI_total_2)
+svm_msav_pred_train_mae 
+svm_msav_pred_train_mae_rel <- (svm_msav_pred_train_mae/mean(train.data$CBI_total_2))*100
+svm_msav_pred_train_mae_rel
+svm_msav_pred_train_rmse <- rmse(svm_msav_pred_train, train.data$CBI_total_2)
+svm_msav_pred_train_rmse
+svm_msav_pred_train_rmse_rel <- (svm_msav_pred_train_rmse/mean(train.data$CBI_total_2))*100
+svm_msav_pred_train_rmse_rel
+svm_msav_pred_train_R2 <- R2(svm_msav_pred_train, train.data$CBI_total_2)
+svm_msav_pred_train_R2
+TheilU(train.data$CBI_total_2, svm_msav_pred_train, type = 2)
+svm_msav_train_Ubias <- ((svm_msav_pred_train_mae)*68)/((svm_msav_pred_train_mae)^2)
+svm_msav_train_Ubias
+
+svm_msav_pred_test <- predict(svm_msav_linear, data = darkwoods_fire_plots_data)
+svm_msav_pred_test_rmse <- rmse(svm_msav_pred_test, darkwoods_fire_plots_data$CBI_total_2)
+svm_msav_pred_test_rmse
+svm_msav_pred_test_rmse_rel <- (svm_msav_pred_test_rmse/mean(darkwoods_fire_plots_data$CBI_total_2))*100
+svm_msav_pred_test_rmse_rel
+
+svm_msav_pred_train_rmse/svm_msav_pred_test_rmse
+svm_msav_pred_test_rmse/svm_msav_pred_train_rmse
+
+svm_msav_linear
+plot(svm_msav_linear)
+densityplot(svm_msav_linear)
+svm_msav_linear$finalModel
+plot(svm_msav_linear)
+
+
+#model 6 - TVI results
+summary(lm(predict(svm_tvi_linear) ~ train.data$CBI_total_2))
+svm_tvi_pred_train <- predict(svm_tvi_linear, data = train.data)
+svm_tvi_pred_train_mae <- mae(svm_tvi_pred_train, train.data$CBI_total_2)
+svm_tvi_pred_train_mae 
+svm_tvi_pred_train_mae_rel <- (svm_tvi_pred_train_mae/mean(train.data$CBI_total_2))*100
+svm_tvi_pred_train_mae_rel
+svm_tvi_pred_train_rmse <- rmse(svm_tvi_pred_train, train.data$CBI_total_2)
+svm_tvi_pred_train_rmse
+svm_tvi_pred_train_rmse_rel <- (svm_tvi_pred_train_rmse/mean(train.data$CBI_total_2))*100
+svm_tvi_pred_train_rmse_rel
+svm_tvi_pred_train_R2 <- R2(svm_tvi_pred_train, train.data$CBI_total_2)
+svm_tvi_pred_train_R2
+TheilU(train.data$CBI_total_2, svm_tvi_pred_train, type = 2)
+svm_tvi_train_Ubias <- ((svm_tvi_pred_train_mae)*68)/((svm_tvi_pred_train_mae)^2)
+svm_tvi_train_Ubias
+
+svm_tvi_pred_test <- predict(svm_tvi_linear, data = darkwoods_fire_plots_data)
+svm_tvi_pred_test_rmse <- rmse(svm_tvi_pred_test, darkwoods_fire_plots_data$CBI_total_2)
+svm_tvi_pred_test_rmse
+svm_tvi_pred_test_rmse_rel <- (svm_tvi_pred_test_rmse/mean(darkwoods_fire_plots_data$CBI_total_2))*100
+svm_tvi_pred_test_rmse_rel
+
+svm_tvi_pred_train_rmse/svm_tvi_pred_test_rmse
+svm_tvi_pred_test_rmse/svm_tvi_pred_train_rmse
+
+svm_tvi_linear
+plot(svm_tvi_linear)
+densityplot(svm_tvi_linear)
+svm_tvi_linear$finalModel
+plot(svm_tvi_linear)
+
+
+#model 7 - TVI-SW results
+summary(lm(predict(svm_tvi_sw_linear) ~ train.data$CBI_total_2))
+svm_tvi_sw_pred_train <- predict(svm_tvi_sw_linear, data = train.data)
+svm_tvi_sw_pred_train_mae <- mae(svm_tvi_sw_pred_train, train.data$CBI_total_2)
+svm_tvi_sw_pred_train_mae 
+svm_tvi_sw_pred_train_mae_rel <- (svm_tvi_sw_pred_train_mae/mean(train.data$CBI_total_2))*100
+svm_tvi_sw_pred_train_mae_rel
+svm_tvi_sw_pred_train_rmse <- rmse(svm_tvi_sw_pred_train, train.data$CBI_total_2)
+svm_tvi_sw_pred_train_rmse
+svm_tvi_sw_pred_train_rmse_rel <- (svm_tvi_sw_pred_train_rmse/mean(train.data$CBI_total_2))*100
+svm_tvi_sw_pred_train_rmse_rel
+svm_tvi_sw_pred_train_R2 <- R2(svm_tvi_sw_pred_train, train.data$CBI_total_2)
+svm_tvi_sw_pred_train_R2
+TheilU(train.data$CBI_total_2, svm_tvi_sw_pred_train, type = 2)
+svm_tvi_sw_train_Ubias <- ((svm_tvi_sw_pred_train_mae)*68)/((svm_tvi_sw_pred_train_mae)^2)
+svm_tvi_sw_train_Ubias
+
+svm_tvi_sw_pred_test <- predict(svm_tvi_sw_linear, data = darkwoods_fire_plots_data)
+svm_tvi_sw_pred_test_rmse <- rmse(svm_tvi_sw_pred_test, darkwoods_fire_plots_data$CBI_total_2)
+svm_tvi_sw_pred_test_rmse
+svm_tvi_sw_pred_test_rmse_rel <- (svm_tvi_sw_pred_test_rmse/mean(darkwoods_fire_plots_data$CBI_total_2))*100
+svm_tvi_sw_pred_test_rmse_rel
+
+svm_tvi_sw_pred_train_rmse/svm_tvi_sw_pred_test_rmse
+svm_tvi_sw_pred_test_rmse/svm_tvi_sw_pred_train_rmse
+
+svm_tvi_sw_linear
+plot(svm_tvi_sw_linear)
+densityplot(svm_tvi_sw_linear)
+svm_tvi_sw_linear$finalModel
+
+plot(svm_tvi_sw_linear)
+```
+
