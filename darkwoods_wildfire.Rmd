@@ -5,8 +5,8 @@ date: "2020-08-29"
 output: github_document
 ---
 
-```{r setup, include=FALSE}
-#install.packages(c("readxl", "sf", "kernlab", "ggplot2", "dplyr", "RColorBrewer", "psych", "useful", "caret", "tibble", "klaR", "ModelMetrics", "DescTools", "MLmetrics", "knitr", "kableExtra"), dependencies=TRUE)
+```{r setup, include=FALSE, warning=FALSE}
+#install.packages(c("readxl", "sf", "kernlab", "ggplot2", "dplyr", "RColorBrewer", "psych", "useful", "caret", "tibble", "klaR", "ModelMetrics", "DescTools", "MLmetrics", "knitr"), dependencies=TRUE)
 library(readxl)
 library(sf)
 library(kernlab)
@@ -19,7 +19,7 @@ library(tibble)
 library(klaR)
 library(ModelMetrics)
 library(DescTools)
-library(kableExtra)
+library(knitr)
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, comment = NA)
 ```
 
@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, comment = NA)
 
 Set seed for replication to `123`. Import excel data representing training data of burn severity classes from candidate spectral indices sampled in-field in composite burn plots.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 set.seed(123) 
 darkwoods_fire_plots_data <- read_excel("3.1.darkwoods_fire_plots.xls")
 kable(head(darkwoods_fire_plots_data))
@@ -36,7 +36,7 @@ kable(head(darkwoods_fire_plots_data))
 
 ## Linear Slope
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 ndbr_lm <- lm(CBI_total_2 ~ NDBR_2016, data = darkwoods_fire_plots_data)
 ndbr_lm_resid <- resid(ndbr_lm)
 plot(CBI_total_2 ~ NDBR_2016, data = darkwoods_fire_plots_data, 
@@ -48,7 +48,7 @@ abline(ndbr_lm, col = "red")
 
 Splitting data 70:30 between training and test subsets according to distribution of response variable: 'CBI_total_2'.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 training.samples <- createDataPartition(darkwoods_fire_plots_data$CBI_total_2, p=0.70, list = FALSE)
                                            train.data <- darkwoods_fire_plots_data[training.samples, ]
                                            test.data <- darkwoods_fire_plots_data[-training.samples, ]
@@ -56,7 +56,7 @@ training.samples <- createDataPartition(darkwoods_fire_plots_data$CBI_total_2, p
 
 Training regimes set by 10K-fold cross validation with 10, 5 and no repeats using `repeatedcv` and `cv` parameters.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 model_training_10kfold_10repeat <- trainControl(method = "repeatedcv", 
                                       number = 10, repeats = 10,
                                       savePredictions = TRUE)
@@ -76,7 +76,7 @@ model_training_10kfold <- trainControl(method = "cv",
 
 Apply 10K-fold-X10 training regime to test prediction of NDBR between three candidate models including linear, non-linear support vector machine regressions, randomForest regression tree using `svmLinear` , `svmRadial` , `rf` kernels. Data preprocessing included using `center` and `scale` operations.
 
-```{r, cache=TRUE}
+```{r, cache=TRUE, warning=FALSE, message=FALSE}
 svm_ndbr_log_linear <- train(CBI_total_2 ~ NDBR_2016, 
                              data = train.data,
                              method = "svmLinear",
@@ -112,9 +112,9 @@ svm_ndbr_log_linear_full <- train(CBI_total_2 ~ NDBR_2016,
 
 ## Model Validation
 
-Compare performance of `svmLinear` model between training, test, and full dataset, using absolute and relative MAE, RMSE, and RMSE-ratio metrics, and `TheilU` statistic of model bias. Results table below taken from manuscript section 2.3. Updates pending.
+Compare performance of `svmLinear` model between training, test, and full dataset, using absolute and relative MAE, RMSE, and RMSE-ratio metrics, and `TheilU` statistic of model bias. Results tables x 2 below were taken from manuscript section 2.3 - both needing updates.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 svm_ndbr_pred_train <- predict(svm_ndbr_log_linear, data = train.data)
 svm_ndbr_pred_test <- predict(svm_ndbr_log_linear, data = test.data)
 svm_ndbr_pred_full <- predict(svm_ndbr_log_linear_full, data = darkwoods_fire_plots_data)
@@ -127,7 +127,7 @@ svm_ndbr_pred_test_mae <- mae(svm_ndbr_pred_test, test.data$CBI_total_2)
 svm_ndbr_pred_full_mae_rel <- (svm_ndbr_pred_full_mae/mean(darkwoods_fire_plots_data$CBI_total_2))*100
 svm_ndbr_pred_train_mae_rel <- (svm_ndbr_pred_train_mae/mean(train.data$CBI_total_2))*100
 svm_ndbr_pred_test_mae_rel <- (svm_ndbr_pred_test_mae/mean(test.data$CBI_total_2))*100
-svm_ndbr_pred_full_rmse <- rmse(svm_ndbr_pred_train, darkwoods_fire_plots_data$CBI_total_2)
+svm_ndbr_pred_full_rmse <- rmse(svm_ndbr_pred_full, darkwoods_fire_plots_data$CBI_total_2)
 svm_ndbr_pred_train_rmse <- rmse(svm_ndbr_pred_train, train.data$CBI_total_2)
 svm_ndbr_pred_test_rmse <- rmse(svm_ndbr_pred_test, test.data$CBI_total_2)
 svm_ndbr_pred_full_rmse_rel <- (svm_ndbr_pred_full_rmse/mean(darkwoods_fire_plots_data$CBI_total_2))*100
@@ -158,18 +158,18 @@ svm_ndbr_full_Ubias_DescTools
 svm_ndbr_log_linear_full$finalModel 
 ```
 
-|         |             |          |               |            |       |       |
-|---------|-------------|----------|---------------|------------|-------|-------|
-|         | **R2**      | **RMSE** | **RMSEratio** | **U-bias** | **C** | **ε** |
-| NBR     | 0.879\*\*\* | 1.05     | 0.46          | 0.035      | 0.336 | 0.10  |
-| BAI2-SL | 0.183\*\*\* | 2.61     | 1.09          | 0.307      | 1.105 | 0.10  |
-| MIRBI   | 0.551\*\*\* | 1.94     | 1.16          | 0.469      | 0.316 | 0.10  |
-| TVI     | 0.584\*\*\* | 1.88     | 1.16          | 0.432      | 0.474 | 0.10  |
-| TVI-SW  | 0.241\*\*\* | 2.54     | 1.10          | 0.343      | 0.158 | 0.10  |
+|           |             |          |                 |            |       |       |
+|:---------:|:-----------:|:--------:|:---------------:|:----------:|:-----:|:-----:|
+| **Model** |   **R2**    | **RMSE** | **RMSE^ratio^** | **TheilU** | **C** | **ε** |
+|    NBR    | 0.879\*\*\* |   1.05   |      0.46       |   0.035    | 0.336 | 0.10  |
+|  BAI2-SL  | 0.183\*\*\* |   2.61   |      1.09       |   0.307    | 1.105 | 0.10  |
+|   MIRBI   | 0.551\*\*\* |   1.94   |      1.16       |   0.469    | 0.316 | 0.10  |
+|    TVI    | 0.584\*\*\* |   1.88   |      1.16       |   0.432    | 0.474 | 0.10  |
+|  TVI-SW   | 0.241\*\*\* |   2.54   |      1.10       |   0.343    | 0.158 | 0.10  |
 
 ## Full Model List
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 #model 2 - NDBR-SW
 svm_ndbr_sw_linear <- train(CBI_total_2 ~ NDBR_SW2_2, 
                             data = train.data,
@@ -219,7 +219,7 @@ svm_tvi_sw_linear <- train(CBI_total_2 ~ VIRSW2_201,
                             tuneGrid = expand.grid(C=seq(0,3, length = 20)))
 ```
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 #model 2 - NDBRSW results
 summary(lm(predict(svm_ndbr_sw_linear) ~ train.data$CBI_total_2))
 svm_ndbr_sw_pred_train <- predict(svm_ndbr_sw_linear, data = train.data)

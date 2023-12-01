@@ -15,551 +15,14 @@ darkwoods_fire_plots_data <- read_excel("3.1.darkwoods_fire_plots.xls")
 kable(head(darkwoods_fire_plots_data))
 ```
 
-<table>
-<thead>
-<tr>
-<th style="text-align:right;">
-plot#
-</th>
-<th style="text-align:right;">
-burn_class_type
-</th>
-<th style="text-align:right;">
-unburned
-</th>
-<th style="text-align:right;">
-low_burn
-</th>
-<th style="text-align:right;">
-med_burn
-</th>
-<th style="text-align:right;">
-high_burn
-</th>
-<th style="text-align:right;">
-x
-</th>
-<th style="text-align:right;">
-y
-</th>
-<th style="text-align:right;">
-B1_2016_Ae
-</th>
-<th style="text-align:right;">
-B2_2016_Bl
-</th>
-<th style="text-align:right;">
-B3_2016_Gr
-</th>
-<th style="text-align:right;">
-B4_2016_Re
-</th>
-<th style="text-align:right;">
-B5_2016_NI
-</th>
-<th style="text-align:right;">
-B6_2016_SW
-</th>
-<th style="text-align:right;">
-B7_2016_SW
-</th>
-<th style="text-align:right;">
-B10_2016_T
-</th>
-<th style="text-align:right;">
-B11_2016_T
-</th>
-<th style="text-align:right;">
-NDBR_2016
-</th>
-<th style="text-align:right;">
-NDBR_SW2_2
-</th>
-<th style="text-align:right;">
-BAI2_2016
-</th>
-<th style="text-align:right;">
-MIRBI_2016
-</th>
-<th style="text-align:right;">
-MSAV_2016
-</th>
-<th style="text-align:right;">
-VIRSW2_201
-</th>
-<th style="text-align:right;">
-VIT2_2016
-</th>
-<th style="text-align:right;">
-CBI_total_2
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-523295.2
-</td>
-<td style="text-align:right;">
-5448198
-</td>
-<td style="text-align:right;">
-9239
-</td>
-<td style="text-align:right;">
-8387
-</td>
-<td style="text-align:right;">
-7733
-</td>
-<td style="text-align:right;">
-7130
-</td>
-<td style="text-align:right;">
-11806
-</td>
-<td style="text-align:right;">
-11179
-</td>
-<td style="text-align:right;">
-8877
-</td>
-<td style="text-align:right;">
-24358
-</td>
-<td style="text-align:right;">
-22577
-</td>
-<td style="text-align:right;">
-20683
-</td>
-<td style="text-align:right;">
--0.114780
-</td>
-<td style="text-align:right;">
-7882.91
-</td>
-<td style="text-align:right;">
-198326
-</td>
-<td style="text-align:right;">
-11806.5
-</td>
-<td style="text-align:right;">
--4801
-</td>
-<td style="text-align:right;">
-34382
-</td>
-<td style="text-align:right;">
-0.8693030
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-524152.4
-</td>
-<td style="text-align:right;">
-5447569
-</td>
-<td style="text-align:right;">
-9151
-</td>
-<td style="text-align:right;">
-8225
-</td>
-<td style="text-align:right;">
-7754
-</td>
-<td style="text-align:right;">
-6715
-</td>
-<td style="text-align:right;">
-14322
-</td>
-<td style="text-align:right;">
-8646
-</td>
-<td style="text-align:right;">
-6641
-</td>
-<td style="text-align:right;">
-24027
-</td>
-<td style="text-align:right;">
-22265
-</td>
-<td style="text-align:right;">
-20963
-</td>
-<td style="text-align:right;">
--0.131159
-</td>
-<td style="text-align:right;">
-53814.10
-</td>
-<td style="text-align:right;">
-151143
-</td>
-<td style="text-align:right;">
-14322.5
-</td>
-<td style="text-align:right;">
--3547
-</td>
-<td style="text-align:right;">
-36586
-</td>
-<td style="text-align:right;">
-1.6098471
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-524264.6
-</td>
-<td style="text-align:right;">
-5447401
-</td>
-<td style="text-align:right;">
-9082
-</td>
-<td style="text-align:right;">
-8158
-</td>
-<td style="text-align:right;">
-7642
-</td>
-<td style="text-align:right;">
-6645
-</td>
-<td style="text-align:right;">
-14295
-</td>
-<td style="text-align:right;">
-8473
-</td>
-<td style="text-align:right;">
-6599
-</td>
-<td style="text-align:right;">
-24182
-</td>
-<td style="text-align:right;">
-22356
-</td>
-<td style="text-align:right;">
-20894
-</td>
-<td style="text-align:right;">
--0.124338
-</td>
-<td style="text-align:right;">
-61169.90
-</td>
-<td style="text-align:right;">
-149027
-</td>
-<td style="text-align:right;">
-14295.5
-</td>
-<td style="text-align:right;">
--3540
-</td>
-<td style="text-align:right;">
-36650
-</td>
-<td style="text-align:right;">
-2.8440873
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-524387.4
-</td>
-<td style="text-align:right;">
-5447414
-</td>
-<td style="text-align:right;">
-9135
-</td>
-<td style="text-align:right;">
-8225
-</td>
-<td style="text-align:right;">
-7738
-</td>
-<td style="text-align:right;">
-6717
-</td>
-<td style="text-align:right;">
-14685
-</td>
-<td style="text-align:right;">
-8773
-</td>
-<td style="text-align:right;">
-6752
-</td>
-<td style="text-align:right;">
-24430
-</td>
-<td style="text-align:right;">
-22601
-</td>
-<td style="text-align:right;">
-21437
-</td>
-<td style="text-align:right;">
--0.130178
-</td>
-<td style="text-align:right;">
--9999.00
-</td>
-<td style="text-align:right;">
-153497
-</td>
-<td style="text-align:right;">
-14685.5
-</td>
-<td style="text-align:right;">
--3596
-</td>
-<td style="text-align:right;">
-37285
-</td>
-<td style="text-align:right;">
-0.6224549
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-524546.1
-</td>
-<td style="text-align:right;">
-5447044
-</td>
-<td style="text-align:right;">
-9017
-</td>
-<td style="text-align:right;">
-8100
-</td>
-<td style="text-align:right;">
-7535
-</td>
-<td style="text-align:right;">
-6547
-</td>
-<td style="text-align:right;">
-13517
-</td>
-<td style="text-align:right;">
-8112
-</td>
-<td style="text-align:right;">
-6378
-</td>
-<td style="text-align:right;">
-24574
-</td>
-<td style="text-align:right;">
-22678
-</td>
-<td style="text-align:right;">
-19895
-</td>
-<td style="text-align:right;">
--0.119670
-</td>
-<td style="text-align:right;">
-16152.40
-</td>
-<td style="text-align:right;">
-143280
-</td>
-<td style="text-align:right;">
-13517.5
-</td>
-<td style="text-align:right;">
--3525
-</td>
-<td style="text-align:right;">
-36194
-</td>
-<td style="text-align:right;">
-1.2647907
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-524139.1
-</td>
-<td style="text-align:right;">
-5446338
-</td>
-<td style="text-align:right;">
-9259
-</td>
-<td style="text-align:right;">
-8422
-</td>
-<td style="text-align:right;">
-8392
-</td>
-<td style="text-align:right;">
-7228
-</td>
-<td style="text-align:right;">
-19434
-</td>
-<td style="text-align:right;">
-10922
-</td>
-<td style="text-align:right;">
-8205
-</td>
-<td style="text-align:right;">
-25829
-</td>
-<td style="text-align:right;">
-23600
-</td>
-<td style="text-align:right;">
-27639
-</td>
-<td style="text-align:right;">
--0.142052
-</td>
-<td style="text-align:right;">
--9999.00
-</td>
-<td style="text-align:right;">
-189088
-</td>
-<td style="text-align:right;">
-19434.5
-</td>
-<td style="text-align:right;">
--3964
-</td>
-<td style="text-align:right;">
-43033
-</td>
-<td style="text-align:right;">
-8.6450162
-</td>
-</tr>
-</tbody>
-</table>
+| plot# | burn_class_type | unburned | low_burn | med_burn | high_burn |        x |       y | B1_2016_Ae | B2_2016_Bl | B3_2016_Gr | B4_2016_Re | B5_2016_NI | B6_2016_SW | B7_2016_SW | B10_2016_T | B11_2016_T | NDBR_2016 | NDBR_SW2_2 | BAI2_2016 | MIRBI_2016 | MSAV_2016 | VIRSW2_201 | VIT2_2016 | CBI_total_2 |
+|------:|----------------:|---------:|---------:|---------:|----------:|---------:|--------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|----------:|-----------:|----------:|-----------:|----------:|-----------:|----------:|------------:|
+|     1 |               0 |        1 |        0 |        0 |         0 | 523295.2 | 5448198 |       9239 |       8387 |       7733 |       7130 |      11806 |      11179 |       8877 |      24358 |      22577 |     20683 |  -0.114780 |   7882.91 |     198326 |   11806.5 |      -4801 |     34382 |   0.8693030 |
+|     2 |               0 |        1 |        0 |        0 |         0 | 524152.4 | 5447569 |       9151 |       8225 |       7754 |       6715 |      14322 |       8646 |       6641 |      24027 |      22265 |     20963 |  -0.131159 |  53814.10 |     151143 |   14322.5 |      -3547 |     36586 |   1.6098471 |
+|     3 |               0 |        1 |        0 |        0 |         0 | 524264.6 | 5447401 |       9082 |       8158 |       7642 |       6645 |      14295 |       8473 |       6599 |      24182 |      22356 |     20894 |  -0.124338 |  61169.90 |     149027 |   14295.5 |      -3540 |     36650 |   2.8440873 |
+|     4 |               0 |        1 |        0 |        0 |         0 | 524387.4 | 5447414 |       9135 |       8225 |       7738 |       6717 |      14685 |       8773 |       6752 |      24430 |      22601 |     21437 |  -0.130178 |  -9999.00 |     153497 |   14685.5 |      -3596 |     37285 |   0.6224549 |
+|     5 |               0 |        1 |        0 |        0 |         0 | 524546.1 | 5447044 |       9017 |       8100 |       7535 |       6547 |      13517 |       8112 |       6378 |      24574 |      22678 |     19895 |  -0.119670 |  16152.40 |     143280 |   13517.5 |      -3525 |     36194 |   1.2647907 |
+|     6 |               0 |        1 |        0 |        0 |         0 | 524139.1 | 5446338 |       9259 |       8422 |       8392 |       7228 |      19434 |      10922 |       8205 |      25829 |      23600 |     27639 |  -0.142052 |  -9999.00 |     189088 |   19434.5 |      -3964 |     43033 |   8.6450162 |
 
 ## Linear Slope
 
@@ -619,45 +82,7 @@ svm_ndbr_log_linear <- train(CBI_total_2 ~ NDBR_2016,
                              preProcess = c("center","scale"), 
                              tuneGrid = expand.grid(C=seq(0,3, length = 10)),
                              metric="RMSE")
-```
 
-    Warning: model fit failed for Fold01: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold02: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold03: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold04: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold05: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold06: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold07: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold08: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold09: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold10: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,
-    : There were missing values in resampled performance measures.
-
-    Warning in train.default(x, y, weights = w, ...): missing values found in
-    aggregated results
-
-``` r
 svm_ndbr_log_radial <- train(CBI_total_2 ~ NDBR_2016, 
                              data = train.data, 
                              method = "svmRadial",
@@ -671,42 +96,7 @@ rf_nndbr_1000trees = train(CBI_total_2 ~ NDBR_2016,
                                     metric="RMSE",
                                     trControl=model_training_10kfold,
                                     importance = TRUE)
-```
 
-    Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid mtry:
-    reset to within valid range
-
-    Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid mtry:
-    reset to within valid range
-
-    Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid mtry:
-    reset to within valid range
-
-    Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid mtry:
-    reset to within valid range
-
-    Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid mtry:
-    reset to within valid range
-
-    Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid mtry:
-    reset to within valid range
-
-    Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid mtry:
-    reset to within valid range
-
-    Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid mtry:
-    reset to within valid range
-
-    Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid mtry:
-    reset to within valid range
-
-    Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid mtry:
-    reset to within valid range
-
-    Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid mtry:
-    reset to within valid range
-
-``` r
 # Selected kernel
 svm_ndbr_log_linear_full <- train(CBI_total_2 ~ NDBR_2016, 
                                   data = darkwoods_fire_plots_data,
@@ -717,48 +107,12 @@ svm_ndbr_log_linear_full <- train(CBI_total_2 ~ NDBR_2016,
                                   metric="RMSE")
 ```
 
-    Warning: model fit failed for Fold01: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold02: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold03: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold04: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold05: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold06: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold07: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold08: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold09: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold10: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,
-    : There were missing values in resampled performance measures.
-
-    Warning in train.default(x, y, weights = w, ...): missing values found in
-    aggregated results
-
 ## Model Validation
 
 Compare performance of `svmLinear` model between training, test, and
 full dataset, using absolute and relative MAE, RMSE, and RMSE-ratio
-metrics, and `TheilU` statistic of model bias. Results table below taken
-from manuscript section 2.3. Updates pending.
+metrics, and `TheilU` statistic of model bias. Results tables x 2 below
+were taken from manuscript section 2.3 - both needing updates.
 
 ``` r
 svm_ndbr_pred_train <- predict(svm_ndbr_log_linear, data = train.data)
@@ -767,19 +121,13 @@ svm_ndbr_pred_full <- predict(svm_ndbr_log_linear_full, data = darkwoods_fire_pl
 svm_ndbr_pred_full_r2 = MLmetrics::R2_Score(svm_ndbr_pred_full, darkwoods_fire_plots_data$CBI_total_2)
 svm_ndbr_pred_train_r2 = MLmetrics::R2_Score(svm_ndbr_pred_train, train.data$CBI_total_2)
 svm_ndbr_pred_test_r2 = MLmetrics::R2_Score(svm_ndbr_pred_test, test.data$CBI_total_2)
-```
-
-    Warning in y_true - y_pred: longer object length is not a multiple of shorter
-    object length
-
-``` r
 svm_ndbr_pred_full_mae <- mae(svm_ndbr_pred_full, darkwoods_fire_plots_data$CBI_total_2)
 svm_ndbr_pred_train_mae <- mae(svm_ndbr_pred_train, train.data$CBI_total_2)
 svm_ndbr_pred_test_mae <- mae(svm_ndbr_pred_test, test.data$CBI_total_2)
 svm_ndbr_pred_full_mae_rel <- (svm_ndbr_pred_full_mae/mean(darkwoods_fire_plots_data$CBI_total_2))*100
 svm_ndbr_pred_train_mae_rel <- (svm_ndbr_pred_train_mae/mean(train.data$CBI_total_2))*100
 svm_ndbr_pred_test_mae_rel <- (svm_ndbr_pred_test_mae/mean(test.data$CBI_total_2))*100
-svm_ndbr_pred_full_rmse <- rmse(svm_ndbr_pred_train, darkwoods_fire_plots_data$CBI_total_2)
+svm_ndbr_pred_full_rmse <- rmse(svm_ndbr_pred_full, darkwoods_fire_plots_data$CBI_total_2)
 svm_ndbr_pred_train_rmse <- rmse(svm_ndbr_pred_train, train.data$CBI_total_2)
 svm_ndbr_pred_test_rmse <- rmse(svm_ndbr_pred_test, test.data$CBI_total_2)
 svm_ndbr_pred_full_rmse_rel <- (svm_ndbr_pred_full_rmse/mean(darkwoods_fire_plots_data$CBI_total_2))*100
@@ -822,7 +170,7 @@ svm_ndbr_pred_train_mae
 svm_ndbr_pred_test_mae
 ```
 
-    [1] 4.015062
+    [1] 4.022415
 
 ``` r
 svm_ndbr_pred_full_mae_rel
@@ -840,13 +188,13 @@ svm_ndbr_pred_train_mae_rel
 svm_ndbr_pred_test_mae_rel
 ```
 
-    [1] 91.3992
+    [1] 91.56658
 
 ``` r
 svm_ndbr_pred_full_rmse
 ```
 
-    [1] 3.815407
+    [1] 1.008688
 
 ``` r
 svm_ndbr_pred_train_rmse
@@ -858,13 +206,13 @@ svm_ndbr_pred_train_rmse
 svm_ndbr_pred_test_rmse
 ```
 
-    [1] 4.756301
+    [1] 4.774957
 
 ``` r
 svm_ndbr_pred_full_rmse_rel
 ```
 
-    [1] 90.57044
+    [1] 23.94431
 
 ``` r
 svm_ndbr_pred_train_rmse_rel
@@ -876,19 +224,19 @@ svm_ndbr_pred_train_rmse_rel
 svm_ndbr_pred_test_rmse_rel
 ```
 
-    [1] 108.2728
+    [1] 108.6975
 
 ``` r
 svm_ndbr_pred_train_rmseRatio
 ```
 
-    [1] 0.1809649
+    [1] 0.1802579
 
 ``` r
 svm_ndbr_pred_test_rmseRatio
 ```
 
-    [1] 5.525933
+    [1] 5.547608
 
 ``` r
 svm_ndbr_full_Ubias_DescTools
@@ -912,14 +260,14 @@ svm_ndbr_log_linear_full$finalModel
     Objective Function Value : -5.0484 
     Training error : 0.116535 
 
-|         |             |          |               |            |       |       |
-|---------|-------------|----------|---------------|------------|-------|-------|
-|         | **R2**      | **RMSE** | **RMSEratio** | **U-bias** | **C** | **ε** |
-| NBR     | 0.879\*\*\* | 1.05     | 0.46          | 0.035      | 0.336 | 0.10  |
-| BAI2-SL | 0.183\*\*\* | 2.61     | 1.09          | 0.307      | 1.105 | 0.10  |
-| MIRBI   | 0.551\*\*\* | 1.94     | 1.16          | 0.469      | 0.316 | 0.10  |
-| TVI     | 0.584\*\*\* | 1.88     | 1.16          | 0.432      | 0.474 | 0.10  |
-| TVI-SW  | 0.241\*\*\* | 2.54     | 1.10          | 0.343      | 0.158 | 0.10  |
+|           |             |          |                          |            |       |       |
+|:---------:|:-----------:|:--------:|:------------------------:|:----------:|:-----:|:-----:|
+| **Model** |   **R2**    | **RMSE** | **RMSE<sup>ratio</sup>** | **TheilU** | **C** | **ε** |
+|    NBR    | 0.879\*\*\* |   1.05   |           0.46           |   0.035    | 0.336 | 0.10  |
+|  BAI2-SL  | 0.183\*\*\* |   2.61   |           1.09           |   0.307    | 1.105 | 0.10  |
+|   MIRBI   | 0.551\*\*\* |   1.94   |           1.16           |   0.469    | 0.316 | 0.10  |
+|    TVI    | 0.584\*\*\* |   1.88   |           1.16           |   0.432    | 0.474 | 0.10  |
+|  TVI-SW   | 0.241\*\*\* |   2.54   |           1.10           |   0.343    | 0.158 | 0.10  |
 
 ## Full Model List
 
@@ -931,45 +279,7 @@ svm_ndbr_sw_linear <- train(CBI_total_2 ~ NDBR_SW2_2,
                             trControl = model_training_10kfold, 
                             preProcess = c("center","scale"), 
                             tuneGrid = expand.grid(C=seq(0,3, length = 20)))
-```
 
-    Warning: model fit failed for Fold01: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold02: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold03: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold04: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold05: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold06: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold07: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold08: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold09: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold10: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,
-    : There were missing values in resampled performance measures.
-
-    Warning in train.default(x, y, weights = w, ...): missing values found in
-    aggregated results
-
-``` r
 #model 3 - BAI2
 svm_bai2_linear <- train(CBI_total_2 ~ BAI2_2016, 
                             data = train.data,
@@ -977,45 +287,7 @@ svm_bai2_linear <- train(CBI_total_2 ~ BAI2_2016,
                             trControl = model_training_10kfold, 
                             preProcess = c("center","scale"), 
                             tuneGrid = expand.grid(C=seq(0,3, length = 20)))
-```
 
-    Warning: model fit failed for Fold01: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold02: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold03: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold04: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold05: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold06: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold07: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold08: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold09: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold10: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,
-    : There were missing values in resampled performance measures.
-
-    Warning in train.default(x, y, weights = w, ...): missing values found in
-    aggregated results
-
-``` r
 #model 4 - MIRBI
 svm_mirbi_linear <- train(CBI_total_2 ~ MIRBI_2016, 
                             data = train.data,
@@ -1023,45 +295,7 @@ svm_mirbi_linear <- train(CBI_total_2 ~ MIRBI_2016,
                             trControl = model_training_10kfold, 
                             preProcess = c("center","scale"), 
                             tuneGrid = expand.grid(C=seq(0,3, length = 20)))
-```
 
-    Warning: model fit failed for Fold01: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold02: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold03: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold04: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold05: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold06: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold07: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold08: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold09: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold10: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,
-    : There were missing values in resampled performance measures.
-
-    Warning in train.default(x, y, weights = w, ...): missing values found in
-    aggregated results
-
-``` r
 #model 5 - MSAV
 svm_msav_linear <- train(CBI_total_2 ~ MSAV_2016, 
                             data = train.data,
@@ -1069,45 +303,7 @@ svm_msav_linear <- train(CBI_total_2 ~ MSAV_2016,
                             trControl = model_training_10kfold, 
                             preProcess = c("center","scale"), 
                             tuneGrid = expand.grid(C=seq(0,3, length = 20)))
-```
 
-    Warning: model fit failed for Fold01: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold02: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold03: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold04: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold05: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold06: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold07: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold08: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold09: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold10: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,
-    : There were missing values in resampled performance measures.
-
-    Warning in train.default(x, y, weights = w, ...): missing values found in
-    aggregated results
-
-``` r
 #model 6 - TVI
 svm_tvi_linear <- train(CBI_total_2 ~ VIT2_2016, 
                             data = train.data,
@@ -1115,45 +311,7 @@ svm_tvi_linear <- train(CBI_total_2 ~ VIT2_2016,
                             trControl = model_training_10kfold, 
                             preProcess = c("center","scale"), 
                             tuneGrid = expand.grid(C=seq(0,3, length = 20)))
-```
 
-    Warning: model fit failed for Fold01: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold02: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold03: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold04: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold05: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold06: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold07: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold08: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold09: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold10: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,
-    : There were missing values in resampled performance measures.
-
-    Warning in train.default(x, y, weights = w, ...): missing values found in
-    aggregated results
-
-``` r
 #model 7 - TVI-SW
 svm_tvi_sw_linear <- train(CBI_total_2 ~ VIRSW2_201, 
                             data = train.data,
@@ -1162,42 +320,6 @@ svm_tvi_sw_linear <- train(CBI_total_2 ~ VIRSW2_201,
                             preProcess = c("center","scale"), 
                             tuneGrid = expand.grid(C=seq(0,3, length = 20)))
 ```
-
-    Warning: model fit failed for Fold01: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold02: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold03: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold04: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold05: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold06: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold07: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold08: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold09: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning: model fit failed for Fold10: C=0.0000 Error in .local(x, ...) : 
-      No Support Vectors found. You may want to change your parameters
-
-    Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,
-    : There were missing values in resampled performance measures.
-
-    Warning in train.default(x, y, weights = w, ...): missing values found in
-    aggregated results
 
 ``` r
 #model 2 - NDBRSW results
