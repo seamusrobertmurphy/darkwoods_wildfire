@@ -2,11 +2,16 @@
 title: "Remote sensing of wildfire burn severity; Darkwoods Conservation Area"
 author: "SMurphy"
 date: "2020-08-29"
-output: github_document
+output:
+  github_document:
+    toc: TRUE
+    toc_depth: 5
+    df_print: tibble
+#always_allow_html: yes
 ---
 
-```{r setup, include=FALSE, warning=FALSE}
-#install.packages(c("readxl", "sf", "kernlab", "ggplot2", "dplyr", "RColorBrewer", "psych", "useful", "caret", "tibble", "klaR", "ModelMetrics", "DescTools", "MLmetrics", "knitr"), dependencies=TRUE)
+```{r setup, include=FALSE, message = FALSE, warning=FALSE, error=FALSE}
+options(htmltools.dir.version = FALSE, htmltools.preserve.raw = FALSE)
 library(readxl)
 library(sf)
 library(kernlab)
@@ -20,21 +25,31 @@ library(klaR)
 library(ModelMetrics)
 library(DescTools)
 library(knitr)
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, comment = NA)
+library(animation)
+knitr::opts_chunk$set(
+  echo = TRUE, message = FALSE, warning = FALSE, 
+  error=FALSE, comment = NA,tidy.opts=list(width.cutoff=60),tidy=TRUE)
+# load the following variable for environment setup
+#requirements = install.packages(c(
+#  "readxl", "sf", "kernlab", "ggplot2", "dplyr", 
+#  "RColorBrewer", "psych", "useful", "caret", 
+#  "tibble", "klaR", "ModelMetrics", "DescTools", 
+#  "MLmetrics", "knitr"), dependencies=TRUE)
+#requirements
 ```
 
-## Import
+## 1. Model Designs
+
+### 1.1 Import Data
 
 Set seed for replication to `123`. Import excel data representing training data of burn severity classes from candidate spectral indices sampled in-field in composite burn plots.
 
 ```{r, warning=FALSE, message=FALSE}
 set.seed(123) 
-darkwoods_fire_plots_data <- read_excel("3.1.darkwoods_fire_plots.xls")
-kable(head(darkwoods_fire_plots_data))
-
+darkwoods_fire_plots_data <- read_excel("3.1.darkwoods_fire_ground_plots.xls")
 ```
 
-## Linear Slope
+### 1.2 Model Slope
 
 ```{r, warning=FALSE, message=FALSE}
 ndbr_lm <- lm(CBI_total_2 ~ NDBR_2016, data = darkwoods_fire_plots_data)
@@ -44,9 +59,9 @@ plot(CBI_total_2 ~ NDBR_2016, data = darkwoods_fire_plots_data,
 abline(ndbr_lm, col = "red")
 ```
 
-## Model Training
+### 1.3 Model Training
 
-Splitting data 70:30 between training and test subsets according to distribution of response variable: 'CBI_total_2'.
+Splitting data 70:30 between training and test subsets according to distribution of response variable: `CBI_total_2`.
 
 ```{r, warning=FALSE, message=FALSE}
 training.samples <- createDataPartition(darkwoods_fire_plots_data$CBI_total_2, p=0.70, list = FALSE)
@@ -70,9 +85,10 @@ model_training_10kfold_3repeat <- trainControl(method = "repeatedcv",
 model_training_10kfold <- trainControl(method = "cv",
                                       number = 10, 
                                       savePredictions = TRUE) 
+animation::cv.ani(k=10)
 ```
 
-## Model Tuning
+### 1.4 Model Tuning
 
 Apply 10K-fold-X10 training regime to test prediction of NDBR between three candidate models including linear, non-linear support vector machine regressions, randomForest regression tree using `svmLinear` , `svmRadial` , `rf` kernels. Data preprocessing included using `center` and `scale` operations.
 
@@ -110,7 +126,7 @@ svm_ndbr_log_linear_full <- train(CBI_total_2 ~ NDBR_2016,
 
 ```
 
-## Model Validation
+### 1.5 Model Validation
 
 Compare performance of `svmLinear` model between training, test, and full dataset, using absolute and relative MAE, RMSE, and RMSE-ratio metrics, and `TheilU` statistic of model bias. Results tables x 2 below were taken from manuscript section 2.3 - both needing updates.
 
@@ -167,7 +183,7 @@ svm_ndbr_log_linear_full$finalModel
 |    TVI    | 0.584\*\*\* |   1.88   |      1.16       |   0.432    | 0.474 | 0.10  |
 |  TVI-SW   | 0.241\*\*\* |   2.54   |      1.10       |   0.343    | 0.158 | 0.10  |
 
-## Full Model List
+## 2. Full Model List
 
 ```{r, warning=FALSE, message=FALSE}
 #model 2 - NDBR-SW
