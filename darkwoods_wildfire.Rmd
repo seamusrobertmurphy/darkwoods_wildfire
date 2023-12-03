@@ -130,7 +130,18 @@ svm_ndbr_log_linear_full <- train(CBI_total_2 ~ NDBR_2016,
 
 ### 1.5 Model Validation
 
-Compare performance of `svmLinear` model between training, test, and full dataset, using absolute and relative MAE, RMSE, and RMSE-ratio metrics, and `TheilU` statistic of model bias. Results tables x 2 below were taken from manuscript section 2.3 - both needing updates.
+Compare performance of `svmLinear` model between training, test, and full dataset, using absolute and relative MAE, RMSE, and RMSE-ratio metrics, and `TheilU` statistic of model bias. Following results table is taken from manuscript section 2.3.
+
+
+|           |             |          |                 |            |       |       |
+|:---------:|:-----------:|:--------:|:---------------:|:----------:|:-----:|:-----:|
+| **Model** |   **R2**    | **RMSE** | **RMSE^ratio^** | **TheilU** | **C** | **ε** |
+|    NBR    | 0.879\*\*\* |   1.05   |      0.46       |   0.035    | 0.336 | 0.10  |
+|  BAI2-SL  | 0.183\*\*\* |   2.61   |      1.09       |   0.307    | 1.105 | 0.10  |
+|   MIRBI   | 0.551\*\*\* |   1.94   |      1.16       |   0.469    | 0.316 | 0.10  |
+|    TVI    | 0.584\*\*\* |   1.88   |      1.16       |   0.432    | 0.474 | 0.10  |
+|  TVI-SW   | 0.241\*\*\* |   2.54   |      1.10       |   0.343    | 0.158 | 0.10  |
+
 
 ```{r, warning=FALSE, message=FALSE}
 svm_ndbr_pred_train <- predict(svm_ndbr_log_linear, data = train.data)
@@ -175,15 +186,6 @@ svm_ndbr_pred_test_rmseRatio
 svm_ndbr_full_Ubias_DescTools
 svm_ndbr_log_linear_full$finalModel 
 ```
-
-|           |             |          |                 |            |       |       |
-|:---------:|:-----------:|:--------:|:---------------:|:----------:|:-----:|:-----:|
-| **Model** |   **R2**    | **RMSE** | **RMSE^ratio^** | **TheilU** | **C** | **ε** |
-|    NBR    | 0.879\*\*\* |   1.05   |      0.46       |   0.035    | 0.336 | 0.10  |
-|  BAI2-SL  | 0.183\*\*\* |   2.61   |      1.09       |   0.307    | 1.105 | 0.10  |
-|   MIRBI   | 0.551\*\*\* |   1.94   |      1.16       |   0.469    | 0.316 | 0.10  |
-|    TVI    | 0.584\*\*\* |   1.88   |      1.16       |   0.432    | 0.474 | 0.10  |
-|  TVI-SW   | 0.241\*\*\* |   2.54   |      1.10       |   0.343    | 0.158 | 0.10  |
 
 ## 2. Full Model List
 
