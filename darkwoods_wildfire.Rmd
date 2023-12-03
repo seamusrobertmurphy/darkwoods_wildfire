@@ -85,7 +85,9 @@ model_training_10kfold_3repeat <- trainControl(method = "repeatedcv",
 model_training_10kfold <- trainControl(method = "cv",
                                       number = 10, 
                                       savePredictions = TRUE) 
-animation::cv.ani(k=10)
+
+#10k-fold method
+knitr::include_graphics(path="animation.gif")
 ```
 
 ### 1.4 Model Tuning

@@ -63,10 +63,12 @@ model_training_10kfold_3repeat <- trainControl(method = "repeatedcv",
 
 model_training_10kfold <- trainControl(method = "cv", number = 10,
     savePredictions = TRUE)
-animation::cv.ani(k = 10)
+
+# 10k-fold method
+knitr::include_graphics(path = "animation.gif")
 ```
 
-![](darkwoods_wildfire_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->![](darkwoods_wildfire_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->![](darkwoods_wildfire_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->![](darkwoods_wildfire_files/figure-gfm/unnamed-chunk-4-4.png)<!-- -->![](darkwoods_wildfire_files/figure-gfm/unnamed-chunk-4-5.png)<!-- -->![](darkwoods_wildfire_files/figure-gfm/unnamed-chunk-4-6.png)<!-- -->![](darkwoods_wildfire_files/figure-gfm/unnamed-chunk-4-7.png)<!-- -->![](darkwoods_wildfire_files/figure-gfm/unnamed-chunk-4-8.png)<!-- -->![](darkwoods_wildfire_files/figure-gfm/unnamed-chunk-4-9.png)<!-- -->![](darkwoods_wildfire_files/figure-gfm/unnamed-chunk-4-10.png)<!-- -->
+![](animation.gif)<!-- -->
 
 ### 1.4 Model Tuning
 
@@ -170,7 +172,7 @@ svm_ndbr_pred_train_mae
 svm_ndbr_pred_test_mae
 ```
 
-    [1] 4.022414
+    [1] 4.015062
 
 ``` r
 svm_ndbr_pred_full_mae_rel
@@ -188,7 +190,7 @@ svm_ndbr_pred_train_mae_rel
 svm_ndbr_pred_test_mae_rel
 ```
 
-    [1] 91.56658
+    [1] 91.3992
 
 ``` r
 svm_ndbr_pred_full_rmse
@@ -206,7 +208,7 @@ svm_ndbr_pred_train_rmse
 svm_ndbr_pred_test_rmse
 ```
 
-    [1] 4.774957
+    [1] 4.756301
 
 ``` r
 svm_ndbr_pred_full_rmse_rel
@@ -224,19 +226,19 @@ svm_ndbr_pred_train_rmse_rel
 svm_ndbr_pred_test_rmse_rel
 ```
 
-    [1] 108.6975
+    [1] 108.2728
 
 ``` r
 svm_ndbr_pred_train_rmseRatio
 ```
 
-    [1] 0.1802578
+    [1] 0.1809649
 
 ``` r
 svm_ndbr_pred_test_rmseRatio
 ```
 
-    [1] 5.547609
+    [1] 5.525934
 
 ``` r
 svm_ndbr_full_Ubias_DescTools
